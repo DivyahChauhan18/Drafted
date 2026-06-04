@@ -132,7 +132,7 @@ export default function Drafted() {
 
   function downloadPDF() {
     const win = window.open("", "_blank");
-    win.document.write(`<!DOCTYPE html><html><head><style>body{font-family:'Times New Roman',serif;font-size:13px;line-height:1.8;color:#1a1a1a;max-width:720px;margin:40px auto;padding:0 40px;}pre{white-space:pre-wrap;font-family:inherit;}</style><title>Offer Letter</title></head><body><pre>${letter.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</pre><script>window.onload=()=>{window.print();}<\/script></body></html>`);
+    win.document.write(`<!DOCTYPE html><html><head><style>body{font-family:'Times New Roman',serif;font-size:13px;line-height:1.8;color:#1a1a1a;max-width:720px;margin:40px auto;padding:0 40px;}pre{white-space:pre-wrap;font-family:inherit;}</style><title>Offer Letter</title></head><body><pre>${letter.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</pre><script>window.onload=()=>{window.print();}</script></body></html>`);
     win.document.close();
   }
 

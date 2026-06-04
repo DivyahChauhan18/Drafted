@@ -132,7 +132,7 @@ export default function Drafted() {
 
   function downloadPDF() {
     const win = window.open("", "_blank");
-    win.document.write(`<!DOCTYPE html><html><head><style>body{font-family:'Times New Roman',serif;font-size:13px;line-height:1.8;color:#1a1a1a;max-width:720px;margin:40px auto;padding:0 40px;}pre{white-space:pre-wrap;font-family:inherit;}</style><title>Offer Letter</title></head><body><pre>${letter.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</pre><script>window.onload=()=>{window.print();}</script></body></html>`);
+    win.document.write(`<!DOCTYPE html><html><head><style>body{font-family:'Times New Roman',serif;font-size:13px;line-height:1.8;color:#1a1a1a;max-width:720px;margin:40px auto;padding:0 40px;}pre{white-space:pre-wrap;font-family:inherit;}</style><title>Offer Letter</title></head><body><pre>${letter.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</pre><script>window.onload=()=>{window.print();}<\/script></body></html>`);
     win.document.close();
   }
 
@@ -167,7 +167,23 @@ export default function Drafted() {
     </div>
   );
 
-  if (stage === "preview") return (
+  if (stage === "preview") {
+  function renderLetter(text) {
+    return text.split('\n').map((line, i) => {
+      if (line.startsWith('### ')) return <h4 key={i} style={{ fontSize: 13, fontWeight: 700, color: C.text, margin: "14px 0 4px", fontFamily: "'Times New Roman', serif", letterSpacing: "0.04em", textTransform: "uppercase" }}>{line.replace('### ', '')}</h4>;
+      if (line.startsWith('## ')) return <h3 key={i} style={{ fontSize: 15, fontWeight: 700, color: C.text, margin: "16px 0 6px", fontFamily: "'Times New Roman', serif" }}>{line.replace('## ', '')}</h3>;
+      if (line.startsWith('# ')) return <h2 key={i} style={{ fontSize: 17, fontWeight: 700, color: C.text, margin: "18px 0 8px", fontFamily: "'Times New Roman', serif" }}>{line.replace('# ', '')}</h2>;
+      if (line.startsWith('- ')) {
+        const parts = line.replace('- ', '').split(/\*\*(.*?)\*\*/g);
+        return <div key={i} style={{ display: "flex", gap: 8, margin: "3px 0" }}><span style={{ flexShrink: 0, marginTop: 2 }}>·</span><span style={{ fontSize: 13, lineHeight: 1.8 }}>{parts.map((p, j) => j % 2 === 1 ? <strong key={j}>{p}</strong> : p)}</span></div>;
+      }
+      if (!line.trim()) return <div key={i} style={{ height: 8 }} />;
+      const parts = line.split(/\*\*(.*?)\*\*/g);
+      return <p key={i} style={{ margin: "3px 0", lineHeight: 1.85, fontSize: 13 }}>{parts.map((p, j) => j % 2 === 1 ? <strong key={j}>{p}</strong> : p)}</p>;
+    });
+  }
+
+  return (
     <div style={S.root}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap'); button:hover{opacity:0.85}`}</style>
       <div style={S.topbar}>
@@ -181,8 +197,8 @@ export default function Drafted() {
             <p style={{ fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase", color: C.emerald, fontWeight: 700, margin: "0 0 4px" }}>Generated Letter</p>
             <h2 style={{ fontSize: 24, fontWeight: 700, margin: 0, color: C.text }}>Offer for {form.candidateName}</h2>
           </div>
-          <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: "40px 48px", whiteSpace: "pre-wrap", fontSize: 13, lineHeight: 1.9, color: C.text, fontFamily: "'Times New Roman', serif", boxShadow: "0 2px 12px rgba(30,42,36,0.06)" }}>
-            {letter}
+          <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: "40px 48px", fontSize: 13, lineHeight: 1.9, color: C.text, fontFamily: "'Times New Roman', serif", boxShadow: "0 2px 12px rgba(30,42,36,0.06)" }}>
+            {renderLetter(letter)}
           </div>
         </div>
 
@@ -208,6 +224,7 @@ export default function Drafted() {
       </div>
     </div>
   );
+  }
 
   return (
     <div style={S.root}>

@@ -219,7 +219,11 @@ export default function Drafted() {
 
   function downloadPDF() {
     const win = window.open("","_blank");
-    win.document.write(`<!DOCTYPE html><html><head><style>@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap');body{font-family:'Crimson Pro',Georgia,serif;font-size:14px;line-height:1.9;color:#1a1a1a;max-width:720px;margin:48px auto;padding:0 48px;}pre{white-space:pre-wrap;font-family:inherit;}</style><title>Offer Letter — ${form.candidateName}</title></head><body><pre>${letter.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</pre><script>window.onload=()=>{window.print()}</` + `script></body></html>`);
+    const content = `<!DOCTYPE html><html><head><style>body{font-family:'Times New Roman',serif;font-size:14px;line-height:1.9;color:#1a1a1a;max-width:720px;margin:48px auto;padding:0 48px;}pre{white-space:pre-wrap;font-family:inherit;}</style><title>Offer Letter</title></head><body><pre>${letter.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</pre></body></html>`;
+    win.document.write(content);
+    win.document.close();
+    win.focus();
+    setTimeout(() => win.print(), 500);
     win.document.close();
   }
 
